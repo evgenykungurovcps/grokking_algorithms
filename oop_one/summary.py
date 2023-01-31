@@ -50,17 +50,16 @@ while true:
         action='upload',
         )
     ids_to_upload.extend(ids)
+    page_number += 1
     if page_number >= data['pages']:
         break
-        
-    page_number += 1
 
 resumes = []
 for id in ids_to_upload:
     url = f'https://api.hh.ru/resumes/{id}'
     response = connector.get_records(url=url)
-    resume = response.json()
-    resumes.append(resume)
+    resume: List[dict] = response.json()
+    resumes.extend(resume)
         
 records = parser.get_records(resumes)
 loader.save(records)
