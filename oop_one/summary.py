@@ -54,8 +54,16 @@ while true:
         break
         
     page_number += 1
-    
-loader.save(ids_to_upload)
+
+resumes = []
+for id in ids_to_upload:
+    url = f'https://api.hh.ru/resumes/{id}'
+    response = connector.get_records(url=url)
+    resume = response.json()
+    resumes.append(resume)
+        
+records = parser.get_records(resumes)
+loader.save(records)
     
     
     
