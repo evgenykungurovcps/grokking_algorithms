@@ -36,37 +36,3 @@
 Частично реализованные классы играют важную роль в конструировании системы,
 фиксируя общее поведение некоторой группы объектов.
 """
-
-start_url = 'https://api.hh.ru/resumes?all_folders=True&page={}&per_page=50'
-page_number = 0
-ids_to_upload = []
-while true:
-    url = start_url.format(page_number)
-    response = connector.get_response(url=url)
-    data = response.json()
-    items = data['items']
-    ids = loader.get_ids(
-        items=items,
-        action='upload',
-        )
-    ids_to_upload.extend(ids)
-    page_number += 1
-    if page_number >= data['pages']:
-        break
-
-resumes = []
-for id in ids_to_upload:
-    url = f'https://api.hh.ru/resumes/{id}'
-    response = connector.get_records(url=url)
-    resume: List[dict] = response.json()
-    resumes.extend(resume)
-        
-records = parser.get_records(resumes)
-loader.save(records)
-    
-    
-    
-    
-    
-    
-    
